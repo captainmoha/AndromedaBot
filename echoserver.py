@@ -75,7 +75,7 @@ def send_text_message(token, recipient, text):
 
  	headers = {'Content-type': 'application/json'}
 
- 	req = requests.post(MSG_API, params, headers)
+ 	req = requests.post(MSG_API, params=params, data=data, headers=headers)
 
  	if req.status_code != requests.codes.ok:
  		print "failed to send message: " + req.text
