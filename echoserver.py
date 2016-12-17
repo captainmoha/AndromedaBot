@@ -49,10 +49,14 @@ def messaging_events(payload):
 
   	for event in events:
   		if 'message' in event:
-  			message = event['message']
 
   			# handle different types of content
-  			if 'text' in message:
+  			if 'text' in event['message']:
+  				yield event['sender']['id'], event['message']['text']
+
+  			# cases other than text
+  			else:
+  				yield event['sender']['id'], 'u wot m8?'
 
 
 def send_text_message(token, recipient, text):
