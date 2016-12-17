@@ -67,7 +67,7 @@ def send_text_message(token, recipient, text):
  	# send post request to the api with the message
 
  	params = {'access_token': token}
-
+ 	print "id: " + str(recipient)
  	data = json.dumps({
  		'recipient': {'id': recipient},
  		'message': {'text': text.decode('unicode_escape')}
