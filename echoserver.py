@@ -28,7 +28,7 @@ def handle_messages():
 
 	print 'handling messages'
 
-	payload = request.get_date()
+	payload = request.get_data()
 
 	print payload
 
