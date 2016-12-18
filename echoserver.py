@@ -83,7 +83,7 @@ def send_text_message(token, recipient, text):
 	print ("id: " + str(recipient))
 	data = json.dumps({
 		'recipient': {'id': recipient},
-		'message': {'text': get_reply(text).decode('unicode_escape')}
+		'message': {'text': get_reply(text)}
 		})
 
 	headers = {'Content-type': 'application/json'}
