@@ -94,28 +94,38 @@ def send_text_message(token, recipient, text):
 		print ("failed to send message: " + req.text)
 
 def get_reply(text):
+	'''
+		get suitable reply for the user's text message
+	'''
 	text = text.lower()
 	reply = None
+	rows = None
+
 	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'$', '%'+text+'%'))
 	rows = cursor.fetchall()
-	for row in rows:
+
+	if (rows == None):
+		return "Let's talk about something else..."
+	else:
+		print("Rows: " + str(len(rows)))
+
+		randomIndex = random.randrange(0, len(rows))
+		row = rows[randomIndex]
+
 		print("id: %s - text: %s" % (row[0], row[1]))
 		reply_id = int(row[0]) + 1
 		print("reply id: " + str(reply_id))
+
 		cursor.execute('SELECT text FROM LineSearch WHERE line_id = ?', (reply_id,))
 		reply = cursor.fetchone()
-		break
-	print(str(len(rows)))
 
+		if (reply == None):
+			# if we don't find an answer just reply with what we have!
+			return rows[randomIndex][1]
 	
-
+		print("reply: %s" % reply[0])
 	
-	if (reply == None):
-		return "Let's talk about something else..."
-
-	print("reply: %s" % reply[0])
-
-	return reply[0]
+		return reply[0]
 
 
 get_reply('what do you do for fun')
