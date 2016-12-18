@@ -20,6 +20,16 @@ with open('emoji.csv', 'r') as fCSV:
 	emoji = next(reader)
 	print (str(len(emoji)) + ' ' + str(type(emoji))) 
 
+# read smilys
+with open('smiley.csv', 'r') as fCSV:
+	reader = csv.reader(fCSV)
+	smileys = {}
+
+	for row in reader:
+		smileys[row[0]] = [row[1]]
+
+	print (str(len(smileys)) + ' ' + str(type(smileys))) 
+
 # This needs to be filled with the Page Access Token that will be provided
 # by the Facebook App that will be created.
 PAT = 'EAAXVXB27pBsBAF1uLpTMmtJd2pUEJFe2FWlFccjG5ZCJ1TzFXIu7YCeqtqoZAdiECkZBRzDb34dzzFDwMGSez0M2BpiMO4hL633ZBo5sHsHYHDNt4R9SOydGlwTeZC2wjgGkFPZCz5YqCY9Nf27BIZCTyt3KZAPfYTpbMgZAgBbbRrQZDZD'
@@ -147,6 +157,10 @@ def extract_emoji(txt):
 	for emo in txt:
 		if emo in emoji:
 			msg += emo
+
+	for smiley in txt:
+		if smiley in smileys.keys():
+			msg += smileys[smiley]
 
 	return msg
 
