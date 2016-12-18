@@ -120,7 +120,7 @@ def get_reply(text):
 	reply = None
 	rows = None
 
-	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'$', '%'+text+'%'))
+	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'*', '%'+text+'%'))
 	rows = cursor.fetchall()
 
 	if (rows == None or len(rows) == 0):
@@ -173,7 +173,7 @@ def extract_emoji(txt):
 	return msg
 
 def escape_query(s):
-	
+
 	return s.replace('"', '')
 # get_reply('what do you do for fun')
 
