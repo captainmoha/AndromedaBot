@@ -26,7 +26,7 @@ with open('smiley.csv', 'r') as fCSV:
 	smileys = {}
 
 	for row in reader:
-		smileys[row[0]] = [row[1]]
+		smileys[row[0]] = row[1]
 
 	print (str(len(smileys)) + ' ' + str(type(smileys))) 
 
