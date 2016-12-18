@@ -24,25 +24,25 @@ def verify():
 
 	if (request.args.get('hub.verify_token', '') == 'IF_HOPE_IS_THE_ENGINE_OF_THE_SOUL_THEN'):
 
-		print 'Verification successful!'
+		print ('Verification successful!')
 		return request.args.get('hub.challenge', '')
 
 	else:
-		print 'Verification faild!'
+		print ('Verification faild!')
 		return 'Error, wrong token'
 
 
 @app.route('/', methods=['POST'])
 def handle_messages():
 
-	print 'handling messages'
+	print ('handling messages')
 
 	payload = request.get_data()
 
-	print payload
+	print (payload)
 
 	for sender, message in messaging_events(payload):
-		print 'Incoming from %s: %s' % (sender, message)
+		print ('Incoming from %s: %s' % (sender, message))
 		send_text_message(PAT, sender, message)
 
 	return 'ok'
@@ -50,51 +50,51 @@ def handle_messages():
 
 def messaging_events(payload):
 	'''
-		Generate tuples of (sender_id, message_text) from the provided payload.
-  	'''
+	Generate tuples of (sender_id, message_text) from the provided payload.
+ 	'''
 
-  	data = json.loads(payload)
-  	events = data['entry'][0]['messaging']
+	data = json.loads(payload)
+	events = data['entry'][0]['messaging']
 
-  	for event in events:
-  		if 'message' in event:
+	for event in events:
+		if 'message' in event:
 
-  			# handle different types of content
-  			if 'text' in event['message']:
-  				yield event['sender']['id'], event['message']['text']
+			# handle different types of content
+			if 'text' in event['message']:
+				yield event['sender']['id'], event['message']['text']
 
-  			# cases other than text
+			# cases other than text
 
-  			# else if 'attachments' in event['message']:
-  			# 	yield event['sender']['id'], event['message']['attachments']
-  				
-  			else:
-  				yield event['sender']['id'], 'u wot m8?'
+			# else if 'attachments' in event['message']:
+			#	yield event['sender']['id'], event['message']['attachments']
+				
+			else:
+				yield event['sender']['id'], 'u wot m8?'
 
 
 def send_text_message(token, recipient, text):
 	"""
 		Send the message text to recipient with id recipient.
- 	"""
+	"""
 
- 	# send post request to the api with the message
+	# send post request to the api with the message
 
- 	params = {'access_token': token}
- 	print "id: " + str(recipient)
- 	data = json.dumps({
- 		'recipient': {'id': recipient},
- 		'message': {'text': get_reply(text).decode('unicode_escape')}
- 		})
+	params = {'access_token': token}
+	print ("id: " + str(recipient))
+	data = json.dumps({
+		'recipient': {'id': recipient},
+		'message': {'text': get_reply(text).decode('unicode_escape')}
+		})
 
- 	headers = {'Content-type': 'application/json'}
+	headers = {'Content-type': 'application/json'}
 
- 	req = requests.post(MSG_API, params=params, data=data, headers=headers)
+	req = requests.post(MSG_API, params=params, data=data, headers=headers)
 
- 	if req.status_code != requests.codes.ok:
- 		print "failed to send message: " + req.text
+	if req.status_code != requests.codes.ok:
+		print ("failed to send message: " + req.text)
 
 def get_reply(text):
-	text = string.lower(text)
+	text = text.lower()
 	reply = None
 	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'$', '%'+text+'%'))
 	rows = cursor.fetchall()
@@ -126,4 +126,4 @@ if __name__ == '__main__':
 	
 	# heroku
 	app.run()
-  			
+			
