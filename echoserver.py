@@ -37,7 +37,7 @@ def handle_messages():
 
 	print ('handling messages')
 
-	payload = request.get_data()
+	payload = request.get_json()
 
 	print (payload)
 
@@ -53,7 +53,7 @@ def messaging_events(payload):
 	Generate tuples of (sender_id, message_text) from the provided payload.
  	'''
 
-	data = json.loads(payload)
+	# data = json.loads(payload)
 	events = data['entry'][0]['messaging']
 
 	for event in events:
