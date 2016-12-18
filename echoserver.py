@@ -152,15 +152,18 @@ def get_reply(text):
 
 
 def extract_emoji(txt):
-
+	'''
+		extract emojis and smileys from a message contact them
+	'''
 	msg = ""
+	
 	for emo in txt:
 		if emo in emoji:
 			msg += emo
 
 	tokens = txt.split(' ')
 	print(tokens)
-	print(smileys.keys())
+	# print(smileys.keys())
 	for smiley in tokens:
 		if smiley in smileys.keys():
 			msg += smileys[smiley]
