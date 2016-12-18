@@ -96,7 +96,7 @@ def send_text_message(token, recipient, text):
 
 	# send post request to the api with the message
 
-	text = re.escape(text)
+	text = escape_query(text)
 	params = {'access_token': token}
 	print ("id: " + str(recipient))
 	data = json.dumps({
@@ -172,6 +172,9 @@ def extract_emoji(txt):
 
 	return msg
 
+def escape_query(s):
+	s.replace('"', '\\"')
+	return s
 # get_reply('what do you do for fun')
 
 if __name__ == '__main__':
