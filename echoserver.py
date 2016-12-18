@@ -160,6 +160,7 @@ def extract_emoji(txt):
 
 	tokens = txt.split(' ')
 	print(tokens)
+	print(smileys.keys())
 	for smiley in tokens:
 		if smiley in smileys.keys():
 			msg += smileys[smiley]
