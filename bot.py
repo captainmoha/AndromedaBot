@@ -173,7 +173,7 @@ def extract_emoji(txt):
 	return msg
 
 def escape_query(s):
-	s.replace('"', '\\"')
+	s.replace('"', '')
 	return s
 # get_reply('what do you do for fun')
 
