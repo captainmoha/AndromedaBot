@@ -118,7 +118,7 @@ def get_reply(text):
 			return "Let's talk about something else..."
 		else:
 			return emoji_msg
-			
+
 	else:
 		print("Rows: " + str(len(rows)))
 
@@ -144,8 +144,8 @@ def get_reply(text):
 def extract_emoji(txt):
 
 	msg = ""
-	for emo in emoji:
-		if emo in txt:
+	for emo in txt:
+		if emo in emoji:
 			msg += emo
 
 	return msg
