@@ -104,7 +104,7 @@ def get_reply(text):
 	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'$', '%'+text+'%'))
 	rows = cursor.fetchall()
 
-	if (rows == None):
+	if (rows == None or len(rows) == 0):
 		return "Let's talk about something else..."
 	else:
 		print("Rows: " + str(len(rows)))
