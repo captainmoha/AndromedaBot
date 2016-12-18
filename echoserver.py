@@ -54,7 +54,7 @@ def messaging_events(payload):
  	'''
 
 	# data = json.loads(payload)
-	events = data['entry'][0]['messaging']
+	events = payload['entry'][0]['messaging']
 
 	for event in events:
 		if 'message' in event:
