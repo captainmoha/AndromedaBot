@@ -95,6 +95,7 @@ def send_text_message(token, recipient, text):
 
 def get_reply(text):
 	text = string.lower(text)
+	reply = None
 	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'$', '%'+text+'%'))
 	rows = cursor.fetchall()
 	for row in rows:
@@ -120,5 +121,9 @@ def get_reply(text):
 get_reply('what do you do for fun')
 
 if __name__ == '__main__':
-	app.run(debug=True, host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
+	# for c9
+	# app.run(debug=True, host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
+	
+	# heroku
+	app.run()
   			
