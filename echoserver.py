@@ -158,7 +158,9 @@ def extract_emoji(txt):
 		if emo in emoji:
 			msg += emo
 
-	for smiley in txt:
+	tokens = txt.split(' ')
+	print(tokens)
+	for smiley in tokens:
 		if smiley in smileys.keys():
 			msg += smileys[smiley]
 
