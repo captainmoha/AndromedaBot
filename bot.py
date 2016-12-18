@@ -6,6 +6,7 @@ import sqlite3
 import random
 import os
 import csv
+import re
 
 app = Flask(__name__)
 
@@ -95,6 +96,7 @@ def send_text_message(token, recipient, text):
 
 	# send post request to the api with the message
 
+	text = re.escape(text)
 	params = {'access_token': token}
 	print ("id: " + str(recipient))
 	data = json.dumps({
