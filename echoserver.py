@@ -5,6 +5,7 @@ import string
 import sqlite3
 import random
 import os
+import csv
 
 app = Flask(__name__)
 
@@ -13,6 +14,11 @@ DB = 'movies.db'
 db_con = sqlite3.connect(DB, check_same_thread=False)
 cursor = db_con.cursor()
 
+# read emoji
+with open('emoji.csv', 'r') as fCSV:
+	reader = csv.reader(fCSV)
+	emoji = next(reader)
+	print (str(len(emoji)) + ' ' + str(type(emoji))) 
 
 # This needs to be filled with the Page Access Token that will be provided
 # by the Facebook App that will be created.
@@ -97,6 +103,7 @@ def get_reply(text):
 	'''
 		get suitable reply for the user's text message
 	'''
+	raw_txt = text
 	text = text.lower()
 	reply = None
 	rows = None
@@ -105,7 +112,13 @@ def get_reply(text):
 	rows = cursor.fetchall()
 
 	if (rows == None or len(rows) == 0):
-		return "Let's talk about something else..."
+		emoji_msg = extract_emoji(raw_txt)
+
+		if (len(emoji_msg) == 0):
+			return "Let's talk about something else..."
+		else:
+			return emoji_msg
+			
 	else:
 		print("Rows: " + str(len(rows)))
 
@@ -128,7 +141,16 @@ def get_reply(text):
 		return reply[0]
 
 
-get_reply('what do you do for fun')
+def extract_emoji(txt):
+
+	msg = ""
+	for emo in emoji:
+		if emo in txt:
+			msg += emo
+
+	return msg
+
+# get_reply('what do you do for fun')
 
 if __name__ == '__main__':
 	# for c9
