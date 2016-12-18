@@ -173,8 +173,8 @@ def extract_emoji(txt):
 	return msg
 
 def escape_query(s):
-	s.replace('"', '')
-	return s
+	
+	return s.replace('"', '')
 # get_reply('what do you do for fun')
 
 if __name__ == '__main__':
