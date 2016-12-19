@@ -96,7 +96,7 @@ def send_text_message(token, recipient, text):
 
 	# see if the user is commanding and handle user commands
 
-	commandList = message.split(' ')
+	commandList = text.split(' ')
 	if (tokens[0].lower() in ['andromeda', 'rommie', 'rom', 'bot', 'lassie']):
 		handle_commands(token, recipient, commandList)
 
