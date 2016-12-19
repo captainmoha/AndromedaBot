@@ -134,7 +134,18 @@ def get_reply(text):
 
 			if (rows == None or len(rows) == 0):
 				return apologize()
-			
+			else:
+				randomIndex = random.randrange(0, len(rows))
+				row = rows[randomIndex]
+				reply_id = int(row[0]) + 1
+				cursor.execute('SELECT text FROM LineSearch WHERE line_id = ?', (reply_id,))
+				reply = cursor.fetchone()
+				if (reply == None):
+					# if we don't find an answer just reply with what we have!
+					return rows[randomIndex][1]
+				print("bad reply: %s" % reply[0])
+				return reply[0]
+				
 		else:
 			return emoji_msg
 
