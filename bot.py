@@ -116,6 +116,7 @@ def get_reply(text):
 		get suitable reply for the user's text message
 	'''
 	raw_txt = text
+	emoji_msg = extract_emoji(raw_txt)
 	text = escape_query(text).lower()
 	reply = None
 	rows = None
@@ -125,7 +126,7 @@ def get_reply(text):
 
 	# nothing in the database then see if it's an emoji message
 	if (rows == None or len(rows) == 0):
-		emoji_msg = extract_emoji(raw_txt)
+		
 
 		# if it's not an emoji message try the database again less strictly
 		if (len(emoji_msg) == 0):
@@ -133,15 +134,15 @@ def get_reply(text):
 			rows = cursor.fetchall()
 
 			if (rows == None or len(rows) == 0):
-				return apologize()
+				return apologize() + emoji_msg
 			else:
-				return smart_reply(rows, bad=True)
+				return smart_reply(rows, bad=True) + emoji_msg
 
 		else:
 			return emoji_msg
 
 	else:
-		return smart_reply(rows)
+		return smart_reply(rows) + emoji_msg
 
 		
 
