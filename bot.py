@@ -94,22 +94,28 @@ def send_text_message(token, recipient, text):
 		Send the message text to recipient with id recipient.
 	"""
 
-	# send post request to the api with the message
+	# see if the user is commanding and handle user commands
 
+	commandList = message.split(' ')
+	if (tokens[0].lower() in ['andromeda', 'rommie', 'rom', 'bot', 'lassie']):
+		handle_commands(token, recipient, commandList)
 
-	params = {'access_token': token}
-	print ("id: " + str(recipient))
-	data = json.dumps({
-		'recipient': {'id': recipient},
-		'message': {'text': get_reply(text)}
-		})
-
-	headers = {'Content-type': 'application/json'}
-
-	req = requests.post(MSG_API, params=params, data=data, headers=headers)
-
-	if req.status_code != requests.codes.ok:
-		print ("failed to send message: " + req.text)
+	# if it's a normal message
+	else:
+		# send post request to the api with the message
+		params = {'access_token': token}
+		print ("id: " + str(recipient))
+		data = json.dumps({
+			'recipient': {'id': recipient},
+			'message': {'text': get_reply(text)}
+			})
+	
+		headers = {'Content-type': 'application/json'}
+	
+		req = requests.post(MSG_API, params=params, data=data, headers=headers)
+	
+		if req.status_code != requests.codes.ok:
+			print ("failed to send message: " + req.text)
 
 def get_reply(text):
 	'''
@@ -200,6 +206,14 @@ def escape_query(s):
 
 def apologize():
 	return "Let's talk about something else..."
+
+
+def handle_commands(token, recipient, commandList):
+	'''
+		Handle user commands
+	'''
+	print("Gonna handle commands baby!")
+
 # get_reply('what do you do for fun')
 
 if __name__ == '__main__':
