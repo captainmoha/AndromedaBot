@@ -234,7 +234,7 @@ def handle_commands(recipient, commandList):
 			send_post(recipient, "", text_only=False, args=response)
 		else:
 			send_post(recipient, "Invalid movie or series name. Please, try again honey.")
-			send_post(recipient, "", args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
+			send_post(recipient, "", text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
 
 
 
