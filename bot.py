@@ -60,6 +60,8 @@ def handle_messages():
 
 	for sender, message in messaging_events(payload):
 		print ('Incoming from %s: %s' % (sender, message))
+
+		# handle different types of messages. text or attachments
 		send_text_message(PAT, sender, message)
 
 	return 'ok'
@@ -103,24 +105,18 @@ def send_text_message(token, recipient, text):
 	# if it's a normal message
 	else:
 		# send post request to the api with the message
-		params = {'access_token': token}
-		print ("id: " + str(recipient))
-		data = json.dumps({
-			'recipient': {'id': recipient},
-			'message': {'text': get_reply(text)}
-			})
-	
-		headers = {'Content-type': 'application/json'}
-	
-		req = requests.post(MSG_API, params=params, data=data, headers=headers)
-	
-		if req.status_code != requests.codes.ok:
-			print ("failed to send message: " + req.text)
+		send_post(token, recipient, get_reply(text))
+
 
 def get_reply(text):
 	'''
 		get suitable reply for the user's text message
 	'''
+	# the user sent an image (not supported yet)
+	if (text == 'u wot m8?'):
+		return 'u wot m8?'
+
+
 	raw_txt = text
 	emoji_msg = extract_emoji(raw_txt)
 	text = escape_query(text).lower()
@@ -205,6 +201,9 @@ def escape_query(s):
 	return re.sub(r'[^\s\w]', '', s)
 
 def apologize():
+	'''
+		When we've got nothin to say
+	'''
 	return "Let's talk about something else..."
 
 
@@ -212,7 +211,40 @@ def handle_commands(token, recipient, commandList):
 	'''
 		Handle user commands
 	'''
+
+	supported_commands = ['movie']
+
 	print("Gonna handle commands baby!")
+
+	if (len(commandList) < 2) or (commandList[1] not in supported_commands):
+		send_post(token, recipient, "Invalid command my friend!")
+
+
+		
+def send_post(token, recipient, text):
+	# send post request to the api with the message
+
+	params = {'access_token': token}
+	print ("id: " + str(recipient))
+	data = json.dumps({
+		'recipient': {'id': recipient},
+		'message': {'text': text}
+		})
+	
+	headers = {'Content-type': 'application/json'}
+	
+	req = requests.post(MSG_API, params=params, data=data, headers=headers)
+	
+	if req.status_code != requests.codes.ok:
+		print ("failed to send message: " + req.text)
+
+
+def get_movie_json(name):
+	'''
+		Do 
+	'''
+	pass
+
 
 # get_reply('what do you do for fun')
 
