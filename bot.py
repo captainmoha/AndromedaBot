@@ -289,7 +289,7 @@ def send_post(recipient, text, text_only=True, args={}):
 	# handle image
 	elif 'img_url' in args:
 		data = json.dumps({
-			'recipient': recipient,
+			'recipient': {'id': recipient},
 			'message': {
 				'attachment': {
 					'type': 'image',
