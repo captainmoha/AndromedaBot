@@ -259,13 +259,13 @@ def send_post(recipient, text, text_only=True, args={}):
 					'template_type':"generic",
 					'elements':[
 						{
-							'title': args.get(['Title'], 'N/A') + ' (' + args.get(['Year'], 'N/A') + ')\nRating: ' + args.get(['imdbRating'], 'N/A'),
-							'subtitle': args.get(['Plot'], 'N/A'),
-							'image_url': args.get(['Poster'], 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'),
+							'title': args.get('Title', 'N/A') + ' (' + args.get('Year', 'N/A') + ')\nRating: ' + args.get('imdbRating', 'N/A'),
+							'subtitle': args.get('Plot', 'N/A'),
+							'image_url': args.get('Poster', 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'),
 							'buttons':[
 								{
 									'type':"web_url",
-									'url':"http://www.imdb.com/title/" + args.get(['imdbID'], 'http://www.imdb.com'),
+									'url':"http://www.imdb.com/title/" + args.get('imdbID', 'http://www.imdb.com'),
 									'title':"View on imdb"
 								},
 								{
