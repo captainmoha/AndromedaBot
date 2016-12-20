@@ -222,11 +222,13 @@ def handle_commands(recipient, commandList):
 
 	elif (commandList[1] == 'movie'):
 		movie_title = " ".join(commandList[2:])
+
+		# len of response is 2 when the movie is not found
 		response = get_movie_json(movie_title)
 
-
-		# we found a movie!
-		if (response):
+		
+		if (response and len(response) > 2):
+			# we found a movie!
 			send_post(recipient, "", text_only=False, args=response)
 		else:
 			send_post(recipient, "Invalid movie or series name. Please, try again honey.")
@@ -257,7 +259,7 @@ def send_post(recipient, text, text_only=True, args={}):
 					'template_type':"generic",
 					'elements':[
 						{
-							'title': args['Title'] + ' ' + args['Year'] + '\nRating: ' + args['imdbRating'],
+							'title': args['Title'] + ' (' + args['Year'] + ')\nRating: ' + args['imdbRating'],
 							'subtitle': args['Plot'],
 							'image_url': args['Poster'],
 							'buttons':[
