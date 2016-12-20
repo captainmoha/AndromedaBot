@@ -294,7 +294,7 @@ def send_post(recipient, text, text_only=True, args={}):
 				'attachment': {
 					'type': 'image',
 					'payload': {
-						'url': img_url
+						'url': args['img_url']
 					}
 				}
 			}
