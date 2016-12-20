@@ -91,7 +91,7 @@ def messaging_events(payload):
 				yield event['sender']['id'], 'u wot m8?'
 
 
-def send_text_message(token, recipient, text):
+def send_text_message(recipient, text):
 	"""
 		Send the message text to recipient with id recipient.
 	"""
@@ -100,12 +100,12 @@ def send_text_message(token, recipient, text):
 
 	commandList = text.split(' ')
 	if (commandList[0].lower() in ['andromeda', 'rommie', 'rom', 'bot', 'lassie']):
-		handle_commands(token, recipient, commandList)
+		handle_commands(recipient, commandList)
 
 	# if it's a normal message
 	else:
 		# send post request to the api with the message
-		send_post(token, recipient, get_reply(text))
+		send_post(recipient, get_reply(text))
 
 
 def get_reply(text):
@@ -207,7 +207,7 @@ def apologize():
 	return "Let's talk about something else..."
 
 
-def handle_commands(token, recipient, commandList):
+def handle_commands(recipient, commandList):
 	'''
 		Handle user commands
 	'''
@@ -217,14 +217,14 @@ def handle_commands(token, recipient, commandList):
 	print("Gonna handle commands baby!")
 
 	if (len(commandList) < 2) or (commandList[1] not in supported_commands):
-		send_post(token, recipient, "Invalid command my friend!")
+		send_post(recipient, "Invalid command my friend!")
 
 
 		
-def send_post(token, recipient, text):
+def send_post(recipient, text):
 	# send post request to the api with the message
 
-	params = {'access_token': token}
+	params = {'access_token': PAT}
 	print ("id: " + str(recipient))
 	data = json.dumps({
 		'recipient': {'id': recipient},
