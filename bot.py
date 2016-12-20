@@ -62,7 +62,7 @@ def handle_messages():
 		print ('Incoming from %s: %s' % (sender, message))
 
 		# handle different types of messages. text or attachments
-		send_text_message(PAT, sender, message)
+		send_text_message(sender, message)
 
 	return 'ok'
 
