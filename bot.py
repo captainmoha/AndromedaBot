@@ -35,6 +35,7 @@ with open('smiley.csv', 'r') as fCSV:
 # by the Facebook App that will be created.
 PAT = 'EAAXVXB27pBsBAF1uLpTMmtJd2pUEJFe2FWlFccjG5ZCJ1TzFXIu7YCeqtqoZAdiECkZBRzDb34dzzFDwMGSez0M2BpiMO4hL633ZBo5sHsHYHDNt4R9SOydGlwTeZC2wjgGkFPZCz5YqCY9Nf27BIZCTyt3KZAPfYTpbMgZAgBbbRrQZDZD'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
+IMDB_API = 'http://www.omdbapi.com'
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -222,12 +223,20 @@ def handle_commands(recipient, commandList):
 	elif (commandList[1] == 'movie'):
 		movie_title = " ".join(commandList[2:])
 		response = get_movie_json(movie_title)
-		send_post(recipient, "", text_only=False)
+
+
+		# we found a movie!
+		if (response):
+			send_post(recipient, "", text_only=False, args=response)
+		else:
+			send_post(recipient, "Invalid movie or series name. Please, try again honey.")
+
+
 
 
 
 		
-def send_post(recipient, text, text_only=True):
+def send_post(recipient, text, text_only=True, args={}):
 	# send post request to the api with the message
 
 	params = {'access_token': PAT}
@@ -248,44 +257,20 @@ def send_post(recipient, text, text_only=True):
 					'template_type':"generic",
 					'elements':[
 						{
-							'title':"rift",
-							'subtitle':"Next-generation virtual reality",
-							'item_url':"https://www.oculus.com/en-us/rift/",
-							'image_url':"http://messengerdemo.parseapp.com/img/rift.png",
+							'title': args['Title'] + ' ' + args['Year'] + '\nRating: ' + args['imdbRating'],
+							'subtitle': args['Plot'],
+							'image_url': args['Poster'],
 							'buttons':[
 								{
 									'type':"web_url",
-									'url':"https://www.oculus.com/en-us/rift/",
-									'title':"Open Web URL"
+									'url':"http://www.imdb.com/title/" + args['imdbID'],
+									'title':"View on imdb"
 								},
 								{
-									'type':"postback",
-									'title':"Call Postback",
-									'payload':"Payload for first bubble",
-			
+									'type':"element_share"
 								}
 							],
 			
-						},
-	
-						{
-							'title':"touch",
-							'subtitle':"Your Hands, Now in VR",
-							'item_url':"https://www.oculus.com/en-us/touch/",
-							'image_url':"http://messengerdemo.parseapp.com/img/touch.png",
-							'buttons':[
-								{
-									'type':"web_url",
-									'url':"https://www.oculus.com/en-us/touch/",
-									'title':"Open Web URL"
-								},
-								{
-									'type':"postback",
-									'title':"Call Postback",
-									'payload':"Payload for second bubble",
-		
-								}
-							]
 						}
 					]
 				}
@@ -305,7 +290,9 @@ def get_movie_json(movie_title):
 	'''
 		Do 
 	'''
-	pass
+	movie = requests.get(IMDB_API, params={'t': movie_title})
+
+	return movie.json()
 
 
 # get_reply('what do you do for fun')
