@@ -34,6 +34,8 @@ with open('smiley.csv', 'r') as fCSV:
 # This needs to be filled with the Page Access Token that will be provided
 # by the Facebook App that will be created.
 PAT = 'EAAXVXB27pBsBAF1uLpTMmtJd2pUEJFe2FWlFccjG5ZCJ1TzFXIu7YCeqtqoZAdiECkZBRzDb34dzzFDwMGSez0M2BpiMO4hL633ZBo5sHsHYHDNt4R9SOydGlwTeZC2wjgGkFPZCz5YqCY9Nf27BIZCTyt3KZAPfYTpbMgZAgBbbRrQZDZD'
+WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
+WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
 IMDB_API = 'http://www.omdbapi.com'
 
@@ -253,7 +255,7 @@ def send_post(recipient, text, text_only=True, args={}):
 			})
 
 	# handle movies
-	elif args.has_key('Title'):
+	elif 'Title' in args:
 		data = json.dumps({
 		'recipient': {'id': recipient},
 		'message':{
@@ -285,7 +287,7 @@ def send_post(recipient, text, text_only=True, args={}):
 		})
 	
 	# handle image
-	elif args.has_key('img_url'):
+	elif 'img_url' in args:
 		data = json.dumps({
 			'recipient': recipient,
 			'message': {
