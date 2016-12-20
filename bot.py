@@ -232,6 +232,7 @@ def handle_commands(recipient, commandList):
 			send_post(recipient, "", text_only=False, args=response)
 		else:
 			send_post(recipient, "Invalid movie or series name. Please, try again honey.")
+			send_post(recipient, "", args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
 
 
 
@@ -244,12 +245,15 @@ def send_post(recipient, text, text_only=True, args={}):
 	params = {'access_token': PAT}
 	print ("id: " + str(recipient))
 
+	# handle text
 	if text_only:
 		data = json.dumps({
 			'recipient': {'id': recipient},
 			'message': {'text': text}
 			})
-	else:
+
+	# handle movies
+	elif args.has_key('Title'):
 		data = json.dumps({
 		'recipient': {'id': recipient},
 		'message':{
@@ -280,6 +284,20 @@ def send_post(recipient, text, text_only=True, args={}):
 		}
 		})
 	
+	# handle image
+	elif args.has_key('img_url'):
+		data = json.dumps({
+			'recipient': recipient
+			'message': {
+				'attachment': {
+					'type': 'image',
+					'payload': {
+						'url': img_url
+					}
+				}
+			}
+			})
+
 	headers = {'Content-type': 'application/json'}
 	
 	req = requests.post(MSG_API, params=params, data=data, headers=headers)
