@@ -216,19 +216,81 @@ def handle_commands(recipient, commandList):
 
 	print("Gonna handle commands baby!")
 
-	if (len(commandList) < 2) or (commandList[1] not in supported_commands):
+	if (len(commandList) < 3) or (commandList[1] not in supported_commands):
 		send_post(recipient, "Invalid command my friend!")
+
+	elif (commandList[1] == 'movie'):
+		movie_title = " ".join(commandList[2:])
+		response = get_movie_json(movie_title)
+		send_post(recipient, "", text_only=False)
+
 
 
 		
-def send_post(recipient, text):
+def send_post(recipient, text, text_only=True):
 	# send post request to the api with the message
 
 	params = {'access_token': PAT}
 	print ("id: " + str(recipient))
-	data = json.dumps({
+
+	if text_only:
+		data = json.dumps({
+			'recipient': {'id': recipient},
+			'message': {'text': text}
+			})
+	else:
+		data = json.dumps({
 		'recipient': {'id': recipient},
-		'message': {'text': text}
+		'message':{
+			attachment:{
+				type:"template",
+				payload:{
+					template_type:"generic",
+					elements:[
+						{
+							title:"rift",
+							subtitle:"Next-generation virtual reality",
+							item_url:"https://www.oculus.com/en-us/rift/",
+							image_url:"http://messengerdemo.parseapp.com/img/rift.png",
+							buttons:[
+								{
+									type:"web_url",
+									url:"https://www.oculus.com/en-us/rift/",
+									title:"Open Web URL"
+								},
+								{
+									type:"postback",
+									title:"Call Postback",
+									payload:"Payload for first bubble",
+			
+								}
+							],
+			
+						},
+	
+						{
+							title:"touch",
+							subtitle:"Your Hands, Now in VR",
+							item_url:"https://www.oculus.com/en-us/touch/",
+							image_url:"http://messengerdemo.parseapp.com/img/touch.png",
+							buttons:[
+								{
+									type:"web_url",
+									url:"https://www.oculus.com/en-us/touch/",
+									title:"Open Web URL"
+								},
+								{
+									type:"postback",
+									title:"Call Postback",
+									payload:"Payload for second bubble",
+		
+								}
+							]
+						}
+					]
+				}
+			}
+		}
 		})
 	
 	headers = {'Content-type': 'application/json'}
@@ -239,7 +301,7 @@ def send_post(recipient, text):
 		print ("failed to send message: " + req.text)
 
 
-def get_movie_json(name):
+def get_movie_json(movie_title):
 	'''
 		Do 
 	'''
