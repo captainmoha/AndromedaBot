@@ -299,8 +299,8 @@ def send_post(recipient, text, text_only=True, args={}):
 				}
 			}
 			})
-	print("args: " + args)
-	print("data: " + data)
+	print("args: " + str(args))
+	print("data: " + str(data))
 	headers = {'Content-type': 'application/json'}
 	
 	req = requests.post(MSG_API, params=params, data=data, headers=headers)
