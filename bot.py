@@ -35,7 +35,8 @@ with open('smiley.csv', 'r') as fCSV:
 # by the Facebook App that will be created.
 PAT = 'EAAXVXB27pBsBAF1uLpTMmtJd2pUEJFe2FWlFccjG5ZCJ1TzFXIu7YCeqtqoZAdiECkZBRzDb34dzzFDwMGSez0M2BpiMO4hL633ZBo5sHsHYHDNt4R9SOydGlwTeZC2wjgGkFPZCz5YqCY9Nf27BIZCTyt3KZAPfYTpbMgZAgBbbRrQZDZD'
 WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
-WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
+CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
+DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
 IMDB_API = 'http://www.omdbapi.com'
 
@@ -215,13 +216,14 @@ def handle_commands(recipient, commandList):
 		Handle user commands
 	'''
 
-	supported_commands = ['movie']
+	supported_commands = ['movie', 'weather']
 
 	print("Gonna handle commands baby!")
 
 	if (len(commandList) < 3) or (commandList[1] not in supported_commands):
 		send_post(recipient, "Invalid command my friend!")
 
+	# movie
 	elif (commandList[1] == 'movie'):
 		movie_title = " ".join(commandList[2:])
 
@@ -235,6 +237,21 @@ def handle_commands(recipient, commandList):
 		else:
 			send_post(recipient, "Invalid movie or series name. Please, try again honey.")
 			send_post(recipient, "", text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
+
+	# weather
+	elif (commandList[1] == 'weather'):
+		city = " ".join(commandList[2:4])
+		weather_json = get_weather_json(city)
+
+		if (weather_json and len(response) > 2):
+			# we found the city!
+			send_post(recipient, args=weather_json)
+		else:
+			send_post(recipient, "Invalid city name. Please, try again sweetie.")
+			send_post(recipient, "", text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
+
+
+
 
 
 
@@ -286,6 +303,19 @@ def send_post(recipient, text, text_only=True, args={}):
 		}
 		})
 	
+
+	# handle weather
+	elif 'city' in args:
+
+		weather = "Today it is " + args['city']['list']['weather']['main'] + ' in ' + args['city']['name']
+		weather += " Maximum temprature is " + args['city']['list']['temp']['max'] + "and Minimum temprature is "
+		weather += args['city']['list']['temp']['min']
+
+		data = json.dumps({
+			'recipient': {'id':recipient},
+			'message': {'text': weather}
+			})
+
 	# handle image
 	elif 'img_url' in args:
 		data = json.dumps({
@@ -299,8 +329,7 @@ def send_post(recipient, text, text_only=True, args={}):
 				}
 			}
 			})
-	print("args: " + str(args))
-	print("data: " + str(data))
+	
 	headers = {'Content-type': 'application/json'}
 	
 	req = requests.post(MSG_API, params=params, data=data, headers=headers)
@@ -311,11 +340,23 @@ def send_post(recipient, text, text_only=True, args={}):
 
 def get_movie_json(movie_title):
 	'''
-		Do 
+		Make get request to the oIMDB API to get movie info and return it as json
 	'''
 	movie = requests.get(IMDB_API, params={'t': movie_title})
 
 	return movie.json()
+
+def get_weather_json(city):
+
+	# first api call to get city id
+	current_weather = requests.get(CURRENT_WEATHER_API, params={'q': city, 'appid': WEATHER_API_KEY, 'units': 'metric'})
+	city_id = current_weather.get('id', -1)
+
+	# second api call to get weather json
+	current_weather = requests.get(DAILY_WEATHER_API, params={'id':city_id, 'appid': WEATHER_API_KEY, 'units': 'metric', 'cnt': '1'})
+	print("Weather " + str(current_weather))
+	return current_weather.json()
+	
 
 
 # get_reply('what do you do for fun')
