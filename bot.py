@@ -307,7 +307,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 	# handle weather
 	elif 'city' in args:
 
-		weather = "Today, " + args['list'][0]['weather'][0]['main'] + ' in ' + args['city']['name']
+		weather = "Today, " + args['list'][0]['weather'][0]['main'] + ' in ' + args['city']['name'] + ', ' + args['city']['country']
 		weather += "\nMax : " + str(int(args['list'][0]['temp']['max'])) + " Min: "
 		weather += str(int(args['list'][0]['temp']['min']))
 
