@@ -248,7 +248,7 @@ def handle_commands(recipient, commandList):
 			send_post(recipient, args=weather_json)
 		else:
 			send_post(recipient, "Invalid city name. Please, try again sweetie.")
-			send_post(recipient, "", text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
+			send_post(recipient, text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
 
 
 
@@ -258,7 +258,7 @@ def handle_commands(recipient, commandList):
 
 
 		
-def send_post(recipient, text, text_only=True, args={}):
+def send_post(recipient, text="", text_only=True, args={}):
 	# send post request to the api with the message
 
 	params = {'access_token': PAT}
