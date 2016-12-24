@@ -243,7 +243,7 @@ def handle_commands(recipient, commandList):
 		city = " ".join(commandList[2:4])
 		weather_json = get_weather_json(city)
 
-		if (weather_json and len(response) > 2):
+		if (weather_json and len(weather_json) > 2):
 			# we found the city!
 			send_post(recipient, args=weather_json)
 		else:
@@ -353,7 +353,7 @@ def get_weather_json(city):
 
 	if (current_weather and len(current_weather.json()) > 2):
 		city_id = current_weather.json()['id']
-		
+
 		# second api call to get weather json
 		current_weather = requests.get(DAILY_WEATHER_API, params={'id':city_id, 'appid': WEATHER_API_KEY, 'units': 'metric', 'cnt': '1'})
 		print("Weather " + str(current_weather))
