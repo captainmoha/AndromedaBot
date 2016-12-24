@@ -245,7 +245,7 @@ def handle_commands(recipient, commandList):
 
 		if (weather_json and len(weather_json) > 2):
 			# we found the city!
-			send_post(recipient, args=weather_json)
+			send_post(recipient, text_only=False, args=weather_json)
 		else:
 			send_post(recipient, "Invalid city name. Please, try again sweetie.")
 			send_post(recipient, text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
