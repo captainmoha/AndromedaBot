@@ -308,9 +308,9 @@ def send_post(recipient, text="", text_only=True, args={}):
 	elif 'city' in args:
 
 		weather = "Today, " + args['list'][0]['weather'][0]['main'] + ' in ' + args['city']['name']
-		weather += " Maximum temprature is " + str(int(args['list'][0]['temp']['max'])) + " and Minimum temprature is "
+		weather += "\nMax : " + str(int(args['list'][0]['temp']['max'])) + " Min: "
 		weather += str(int(args['list'][0]['temp']['min']))
-		
+
 		data = json.dumps({
 			'recipient': {'id':recipient},
 			'message': {'text': weather}
