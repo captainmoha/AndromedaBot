@@ -33,7 +33,7 @@ with open('smiley.csv', 'r') as fCSV:
 
 # This needs to be filled with the Page Access Token that will be provided
 # by the Facebook App that will be created.
-PAT = 'EAAXVXB27pBsBAF1uLpTMmtJd2pUEJFe2FWlFccjG5ZCJ1TzFXIu7YCeqtqoZAdiECkZBRzDb34dzzFDwMGSez0M2BpiMO4hL633ZBo5sHsHYHDNt4R9SOydGlwTeZC2wjgGkFPZCz5YqCY9Nf27BIZCTyt3KZAPfYTpbMgZAgBbbRrQZDZD'
+PAT = 'EAAXVXB27pBsBABePLFiW7FcE4yRVmRKZCGme85s4xT0GZA2rgDEzwU84bvYbE8TQpoQWOSGVvGLxXhBJqghQ8Ww5uGShm18NZAMhghNN0p7pUmn4ZAfmw8nciuCqrROXffTSwpd6iE6cbMbqH9UmZBrmHFhRqphUSG6spCSUyVwZDZD'
 WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
 CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
