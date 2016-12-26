@@ -483,6 +483,7 @@ def get_wiki_json(query):
 
 		if 'thumbnail' in thumb_page:
 			thumbnail = thumb_page['thumbnail']
+			print('got thumb: ' + thumbnail)
 		else:
 			thumbnail = 'null'
 
