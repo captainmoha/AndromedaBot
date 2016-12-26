@@ -107,7 +107,9 @@ def add_persist_menu():
 	req = requests.post(PERSIST_MENU_API, params=params, data=menu, headers=headers)
 	
 	if req.status_code != requests.codes.ok:
-		print ("failed to add persistant menu " + req.text)
+		print("failed to add persistant menu " + req.text)
+	else:
+		print("added persistent menu " + req.text)
 
 
 def remove_persist_menu():
@@ -421,6 +423,5 @@ if __name__ == '__main__':
 	
 	# heroku
 	app.run()
-	add_persist_menu()
 
 			
