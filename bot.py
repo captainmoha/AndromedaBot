@@ -49,12 +49,17 @@ IMDB_API = 'http://www.omdbapi.com'
 
 @app.route('/', methods=['GET'])
 def verify():
+	'''
+		Verify webhooks with facebook
+	'''
+
 
 	if (request.args.get('hub.verify_token', '') == 'IF_HOPE_IS_THE_ENGINE_OF_THE_SOUL_THEN'):
 
 		print ('Verification successful!')
 		add_persist_menu()
 		add_url_whitelist()
+		add_get_started_button()
 		return request.args.get('hub.challenge', '')
 
 	else:
@@ -65,6 +70,10 @@ def verify():
 
 @app.route('/', methods=['POST'])
 def handle_webhook_requests():
+	'''
+		Handle events sent by facebook via webhooks
+	'''
+
 
 	print ('handling messages')
 
@@ -90,7 +99,7 @@ def messaging_events(payload):
 	Generate tuples of (sender_id, message_text) from the provided payload.
  	'''
 
-	# data = json.loads(payload)
+
 	events = payload['entry'][0]['messaging']
 
 	for event in events:
@@ -119,6 +128,7 @@ def send_text_message(recipient, text):
 		Send the message text to recipient with id recipient.
 	"""
 
+
 	# see if the user is commanding and handle user commands
 
 	commandList = text.split(' ')
@@ -135,10 +145,11 @@ def get_reply(text):
 	'''
 		get suitable reply for the user's text message
 	'''
+
+
 	# the user sent an image (not supported yet)
 	if (text == 'u wot m8?'):
 		return 'u wot m8?'
-
 
 	raw_txt = text
 	emoji_msg = extract_emoji(raw_txt)
@@ -176,6 +187,7 @@ def smart_reply(rows, bad=False):
 		get supposedly smart reply from database and return it
 	'''
 
+
 	print("Rows: " + str(len(rows)))
 	randomIndex = random.randrange(0, len(rows))
 	row = rows[randomIndex]
@@ -198,6 +210,7 @@ def smart_reply(rows, bad=False):
 
 	return reply[0]
 
+
 def extract_emoji(txt):
 	'''
 		extract emojis and smileys from a message contact them
@@ -217,11 +230,13 @@ def extract_emoji(txt):
 
 	return msg
 
+
 def escape_query(s):
 	'''
 		remove all but alphanumeric charcters and white space
 	'''
 	return re.sub(r'[^\s\w]', '', s)
+
 
 def apologize():
 	'''
@@ -234,6 +249,7 @@ def handle_commands(recipient, commandList):
 	'''
 		Handle user commands
 	'''
+
 
 	supported_commands = ['movie', 'weather']
 
@@ -269,9 +285,13 @@ def handle_commands(recipient, commandList):
 			send_post(recipient, "Invalid city name. Please, try again sweetie.")
 			send_post(recipient, text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
 
+
 	
 def send_post(recipient, text="", text_only=True, args={}):
-	# send post request to the api with the message
+	'''
+		 send post request to the api with the message
+	'''
+
 
 	print ("id: " + str(recipient))
 
@@ -352,7 +372,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 			                "elements":[
 			                    {
 			                        "title":"I am Andromeda your bot friend!",
-			                        'subtitle': "Click this to share me",
+			                        'subtitle': "Click the share button to tell your friends!",
 			                        'image_url': "http://i.imgur.com/aBO45Yp.png",
 			                        "default_action":{
 									    "type":"web_url",
@@ -389,7 +409,9 @@ def send_post(recipient, text="", text_only=True, args={}):
 			'message': message 
 			})
 
+	# finally. send the message
 	send_json_post_requst(MSG_API, data)
+
 
 
 def get_movie_json(movie_title):
@@ -401,10 +423,12 @@ def get_movie_json(movie_title):
 
 	return movie.json()
 
+
 def get_weather_json(city):
 	'''
 		Get weather data from openweathermap.org and return it as json
 	'''
+
 
 	# first api call to get city id
 	current_weather = requests.get(CURRENT_WEATHER_API, params={'q': city, 'appid': WEATHER_API_KEY, 'units': 'metric'})
@@ -425,6 +449,7 @@ def add_persist_menu():
 		adds a persistant menu to chat in order to help users or share the bot
 		https://developers.facebook.com/docs/messenger-platform/thread-settings/persistent-menu
 	'''
+
 
 	menu = json.dumps({
 			"setting_type" : "call_to_actions",
@@ -448,6 +473,10 @@ def add_persist_menu():
 
 
 def remove_persist_menu():
+	'''
+		remove persistent menu by sending a delete request
+	'''
+
 
 	delete_menu = json.dumps({
 				"setting_type":"call_to_actions",
@@ -462,9 +491,12 @@ def remove_persist_menu():
 	if req.status_code != requests.codes.ok:
 		print ("failed to delete persistant menu " + req.text)
 
-# get_reply('what do you do for fun')
+
 
 def add_url_whitelist():
+	'''
+		add urls used by the bot to a whitelist as required by facebook
+	'''
 
 	data = json.dumps({
 	    "setting_type": "domain_whitelisting",
@@ -475,7 +507,30 @@ def add_url_whitelist():
 	send_json_post_requst(FB_SETTINGS_API, data)
 
 
+def add_get_started_button():
+	'''
+		send post request to add a postback action for the get started button
+	'''
+
+
+	data = json.dumps({
+		    "setting_type":"call_to_actions",
+		    "thread_state":"new_thread",
+		    "call_to_actions":[
+		        {
+		            "payload":"start"
+		        }
+		    ]
+		})
+
+	send_json_post_requst(FB_SETTINGS_API, data)
+
+
 def send_json_post_requst(url, json_data):
+	'''
+		Send a generic post request to the api in url with the json payload from json_data
+	'''
+
 
 	params = {'access_token': PAT}
 	headers = {'Content-type': 'application/json'}
@@ -486,6 +541,7 @@ def send_json_post_requst(url, json_data):
 		print("json post request faild" + req.text)
 	else:
 		print("json post request succes!")
+
 
 if __name__ == '__main__':
 	# for c9
