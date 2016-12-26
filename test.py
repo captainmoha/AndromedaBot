@@ -82,7 +82,7 @@ def get_wiki_json(query):
 			'summary': summary
 		}
 
-		return json.dumps(wiki_json)
+		return wiki_json
 
 
 my_json = get_wiki_json('stack overflow')
