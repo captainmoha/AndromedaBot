@@ -357,7 +357,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 			                        "default_action":{
 									    "type":"web_url",
 									    "url":"https://www.facebook.com/pg/AndromedaBot",
-									    "messenger_extensions":true,
+									    "messenger_extensions":True,
 									    "webview_height_ratio":"tall",
 									    "fallback_url":"https://www.facebook.com/pg/AndromedaBot"
 									},
