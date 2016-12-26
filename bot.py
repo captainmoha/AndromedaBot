@@ -494,7 +494,7 @@ def get_wiki_json(query):
 			'title': title,
 			'thumbnail': thumbnail,
 			'url': article_url,
-			'summary': summary
+			'summary': summary[:640]
 		}
 
 		return wiki_json
