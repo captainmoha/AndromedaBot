@@ -38,7 +38,7 @@ WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
 CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
-PERSIST_MENU_API = 'https://graph.facebook.com/v2.6/me/thread_settings'
+FB_SETTINGS_API = 'https://graph.facebook.com/v2.6/me/thread_settings'
 # for article summary
 WIKI_API = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow&format=json'
 # # url
@@ -54,6 +54,7 @@ def verify():
 
 		print ('Verification successful!')
 		add_persist_menu()
+		add_url_whitelist()
 		return request.args.get('hub.challenge', '')
 
 	else:
@@ -376,7 +377,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 		elif args['postback'] == 'help':
 			help_msg = 'Hi, My name is Andromeda. I am an android. I am always happy to help :D\n\n'
 			help_msg += '-I can chat with you anytime. Just message me and I will reply!\n\n'
-			help_msg += '-You can also ask me about a movie or series or the weather. Like this.\n'
+			help_msg += '-You can also ask me about a movie or series or the weather. Like this.\n\n'
 			help_msg += 'andromeda weather london'
 			help_msg += '\n\nor\n\n'
 			help_msg += 'andromeda movie interstellar'
@@ -453,7 +454,7 @@ def add_persist_menu():
 	params = {'access_token': PAT}
 	headers = {'Content-type': 'application/json'}
 	
-	req = requests.post(PERSIST_MENU_API, params=params, data=menu, headers=headers)
+	req = requests.post(FB_SETTINGS_API, params=params, data=menu, headers=headers)
 	
 	if req.status_code != requests.codes.ok:
 		print("failed to add persistant menu " + req.text)
@@ -471,12 +472,31 @@ def remove_persist_menu():
 	params = {'access_token': PAT}
 	headers = {'Content-type': 'application/json'}
 	
-	req = requests.delete(PERSIST_MENU_API, params=params, data=delete_menu, headers=headers)
+	req = requests.delete(FB_SETTINGS_API, params=params, data=delete_menu, headers=headers)
 	
 	if req.status_code != requests.codes.ok:
 		print ("failed to delete persistant menu " + req.text)
 
 # get_reply('what do you do for fun')
+
+def add_url_whitelist():
+
+	data = {
+	    "setting_type":"domain_whitelisting",
+	    "whitelisted_domains":[
+	        "https://www.facebook.com"
+	    ],
+	    "domain_action_type":"add"
+	}
+
+	params = {'access_token': PAT}
+	headers = {'Content-type': 'application/json'}
+	
+	req = requests.post(FB_SETTINGS_API, params=params, data=data, headers=headers)
+	
+	if req.status_code != requests.codes.ok:
+		print ("failed to add whitelist" + req.text)
+
 
 if __name__ == '__main__':
 	# for c9
