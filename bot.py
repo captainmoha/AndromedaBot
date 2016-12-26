@@ -285,7 +285,7 @@ def handle_commands(recipient, commandList):
 
 	# handle wikipedia
 	elif (commandList[1] == 'wiki'):
-		wiki_query = " ".join(commandList[2:])
+		wiki_query = " ".join(commandList[2:]).title()
 		wiki_json = get_wiki_json(wiki_query)
 
 		if 'error' in wiki_json:
@@ -296,6 +296,7 @@ def handle_commands(recipient, commandList):
 			send_post(recipient, text_only=False, args={'img_url': wiki_json['thumbnail']})
 			send_post(recipient, wiki_json['summary'])
 			send_post(recipient, 'Read more on wikipedia: ' + wiki_json['url'])
+
 
 
 
