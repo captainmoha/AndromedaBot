@@ -98,7 +98,7 @@ def messaging_events(payload):
 
 
 	events = payload['entry'][0]['messaging']
-
+	print(events)
 	for event in events:
 		if 'message' in event:
 
