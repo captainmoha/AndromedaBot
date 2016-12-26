@@ -39,12 +39,9 @@ CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
 FB_SETTINGS_API = 'https://graph.facebook.com/v2.6/me/thread_settings'
+
 # for article summary
-WIKI_API = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow&format=json'
-# # url
-# 'https://en.wikipedia.org/?curid=21721040'
-# # thumbnail
-# 'https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&pageids=21721040'
+WIKI_API = 'https://en.wikipedia.org/w/api.php'
 IMDB_API = 'http://www.omdbapi.com'
 
 @app.route('/', methods=['GET'])
@@ -251,7 +248,7 @@ def handle_commands(recipient, commandList):
 	'''
 
 
-	supported_commands = ['movie', 'weather']
+	supported_commands = ['movie', 'weather', 'wiki']
 
 	print("Gonna handle commands baby!")
 
@@ -284,6 +281,22 @@ def handle_commands(recipient, commandList):
 		else:
 			send_post(recipient, "Invalid city name. Please, try again sweetie.")
 			send_post(recipient, text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
+
+	# handle wikipedia
+	elif (commandList[1] == 'wiki'):
+		wiki_query = " ".join(commandList[2:])
+		wiki_json = get_wiki_json(wiki_query)
+
+		if 'error' in wiki_json:
+			send_post(recipient, 'No article found on wikipedia for ' + wiki_query + ' Please, try again my friend.')
+
+		else:
+			send_post(recipient, wiki_json['title'])
+			send_post(recipient, text_only=False, args={'img_url': wiki_json['tumbnail']})
+			send_post(recipient, wiki_json['summary'])
+			send_post(recipient, 'Read more on wikipedia: ' + wiki_json['url'])
+
+
 
 
 	
@@ -444,6 +457,47 @@ def get_weather_json(city):
 	return current_weather.json()
 	
 
+def get_wiki_json(query):
+
+	# search the api for query
+	params = {'action': 'query', 'format': 'json', 'prop':'extracts', 'exintro': 'null', 'explaintext': 'null', 'titles': query}
+	search_json = send_json_get_request(WIKI_API, params)
+
+	page = search_json['query']['pages']
+	pageid = list(page.keys())[0]
+
+	# if nothing found
+	if (pageid == '-1'):
+		return json.dumps({'error': '404'})
+
+	# we got a hit!
+	else:
+		# get title and summary
+		title = page[str(pageid)]['title']
+		summary = page[str(pageid)]['extract']
+		# get thumbnail
+		params = {'action': 'query', 'format': 'json', 'prop':'pageimages', 'piprop':'original', 'pageids': pageid}
+		thumb_json = send_json_get_request(WIKI_API, params)
+		thumb_page = thumb_json['query']['pages'][str(pageid)]
+
+		if 'thubmnail' in thumb_page:
+			thumbnail = thumb_page['thumbnail']
+		else:
+			thumbnail = 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'
+
+		article_url = 'https://en.wikipedia.org/?curid=' + str(pageid)
+
+		wiki_json = {
+			'id': str(pageid),
+			'title': title,
+			'thumbnail': thumbnail,
+			'url': article_url,
+			'summary': summary
+		}
+
+		return json.dumps(wiki_json)
+
+
 
 def add_persist_menu():
 	'''
@@ -541,7 +595,21 @@ def send_json_post_requst(url, json_data):
 	if req.status_code != requests.codes.ok:
 		print("json post request faild" + req.text)
 	else:
-		print("json post request succes!")
+		print("json post request succes! " + req.text)
+
+
+def send_json_get_request(url, params):
+
+	req = requests.get(url, params=params)
+
+	if req.status_code != requests.codes.ok:
+		print("json get request faild" + req.text)
+	else:
+		print("json get request success! " + req.text)
+
+	return req.json()
+
+
 
 
 if __name__ == '__main__':

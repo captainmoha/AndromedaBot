@@ -1,5 +1,9 @@
 import requests
+import json
 
+
+# weather test
+'''
 WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
 CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
@@ -24,3 +28,63 @@ weather = "Today, " + args['list'][0]['weather'][0]['main'] + ' in ' + args['cit
 weather += " Maximum temprature is " + str(int(args['list'][0]['temp']['max'])) + " and Minimum temprature is "
 weather += str(int(args['list'][0]['temp']['min']))
 print(weather)
+'''
+
+# wiki test
+
+WIKI_API = 'https://en.wikipedia.org/w/api.php'
+def send_json_get_request(url, params):
+
+	req = requests.get(url, params=params)
+
+	if req.status_code != requests.codes.ok:
+		print("json get request faild" + req.text)
+	else:
+		print("json get request success! " + req.text)
+
+	return req.json()
+
+def get_wiki_json(query):
+
+	# search the api for query
+	params = {'action': 'query', 'format': 'json', 'prop':'extracts', 'exintro': 'null', 'explaintext': 'null', 'titles': query}
+	search_json = send_json_get_request(WIKI_API, params)
+
+	page = search_json['query']['pages']
+	pageid = list(page.keys())[0]
+
+	# if nothing found
+	if (pageid == '-1'):
+		return json.dumps({'error': '404'})
+
+	# we got a hit!
+	else:
+		# get title and summary
+		title = page[str(pageid)]['title']
+		summary = page[str(pageid)]['extract']
+		# get thumbnail
+		params = {'action': 'query', 'format': 'json', 'prop':'pageimages', 'piprop':'original', 'pageids': pageid}
+		thumb_json = send_json_get_request(WIKI_API, params)
+		thumb_page = thumb_json['query']['pages'][str(pageid)]
+
+		if 'thubmnail' in thumb_page:
+			thumbnail = thumb_page['thumbnail']
+		else:
+			thumbnail = 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'
+
+		article_url = 'https://en.wikipedia.org/?curid=' + str(pageid)
+
+		wiki_json = {
+			'id': str(pageid),
+			'title': title,
+			'thumbnail': thumbnail,
+			'url': article_url,
+			'summary': summary
+		}
+
+		return json.dumps(wiki_json)
+
+
+my_json = get_wiki_json('stack overflow')
+
+print(my_json)
