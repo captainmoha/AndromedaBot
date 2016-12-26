@@ -481,13 +481,11 @@ def remove_persist_menu():
 
 def add_url_whitelist():
 
-	data = {
-	    "setting_type":"domain_whitelisting",
-	    "whitelisted_domains":[
-	        "https://www.facebook.com"
-	    ],
-	    "domain_action_type":"add"
-	}
+	data = json.dumps({
+	    "setting_type": "domain_whitelisting",
+	    "whitelisted_domains": ["https://www.facebook.com"],
+	    "domain_action_type": "add"
+	})
 
 	params = {'access_token': PAT}
 	headers = {'Content-type': 'application/json'}
