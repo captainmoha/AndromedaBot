@@ -53,7 +53,6 @@ def verify():
 	if (request.args.get('hub.verify_token', '') == 'IF_HOPE_IS_THE_ENGINE_OF_THE_SOUL_THEN'):
 
 		print ('Verification successful!')
-		add_persist_menu()
 		return request.args.get('hub.challenge', '')
 
 	else:
@@ -422,4 +421,6 @@ if __name__ == '__main__':
 	
 	# heroku
 	app.run()
+	add_persist_menu()
+
 			
