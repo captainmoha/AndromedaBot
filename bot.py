@@ -365,7 +365,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 		
 
 		elif args['postback'] == 'help':
-			message = {text: 'Hi, My name is Andromeda. I am an android. I am always happy to help :)'}
+			message = {'text': 'Hi, My name is Andromeda. I am an android. I am always happy to help :)'}
 		
 		data = json.dumps({
 			'recipient': {'id': recipient},
@@ -423,12 +423,12 @@ def add_persist_menu():
 			  {
 			    "type":"postback",
 			    "title":"Help",
-			    "payload": 'share'
+			    "payload": 'help'
 			  },
 			  {
 			    "type":"postback",
 			    "title":"Share me",
-			    "payload": 'help'
+			    "payload": 'share'
 			  }
 			]
 		})
