@@ -293,7 +293,7 @@ def handle_commands(recipient, commandList):
 
 		else:
 			send_post(recipient, wiki_json['title'])
-			send_post(recipient, text_only=False, args={'img_url': wiki_json['tumbnail']})
+			send_post(recipient, text_only=False, args={'img_url': wiki_json['thumbnail']})
 			send_post(recipient, wiki_json['summary'])
 			send_post(recipient, 'Read more on wikipedia: ' + wiki_json['url'])
 
