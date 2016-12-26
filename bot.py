@@ -63,7 +63,7 @@ def verify():
 
 
 @app.route('/', methods=['POST'])
-def handle_messages():
+def handle_webhook_requests():
 
 	print ('handling messages')
 
@@ -71,7 +71,10 @@ def handle_messages():
 
 	print (payload)
 
-	for sender, message in messaging_events(payload):
+	# handle messages
+	messages = messaging_events(payload)
+
+	for sender, message in messages:
 		print ('Incoming from %s: %s' % (sender, message))
 
 		# handle different types of messages. text or attachments
@@ -80,53 +83,6 @@ def handle_messages():
 	return 'ok'
 
 
-def add_persist_menu():
-	'''
-		adds a persistant menu to chat in order to help users or share the bot
-		https://developers.facebook.com/docs/messenger-platform/thread-settings/persistent-menu
-	'''
-	menu = json.dumps({
-			"setting_type" : "call_to_actions",
-			"thread_state" : "existing_thread",
-			"call_to_actions":[
-			  {
-			    "type":"postback",
-			    "title":"Need help?",
-			    "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_HELP"
-			  },
-			  {
-			    "type":"postback",
-			    "title":"Share me?",
-			    "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_START_ORDER"
-			  }
-			]
-		})
-
-	params = {'access_token': PAT}
-	headers = {'Content-type': 'application/json'}
-	
-	req = requests.post(PERSIST_MENU_API, params=params, data=menu, headers=headers)
-	
-	if req.status_code != requests.codes.ok:
-		print("failed to add persistant menu " + req.text)
-	else:
-		print("added persistent menu " + req.text)
-
-
-def remove_persist_menu():
-
-	delete_menu = json.dumps({
-				"setting_type":"call_to_actions",
-				"thread_state":"existing_thread"
-				})
-
-	params = {'access_token': PAT}
-	headers = {'Content-type': 'application/json'}
-	
-	req = requests.delete(PERSIST_MENU_API, params=params, data=delete_menu, headers=headers)
-	
-	if req.status_code != requests.codes.ok:
-		print ("failed to delete persistant menu " + req.text)
 
 def messaging_events(payload):
 	'''
@@ -150,6 +106,11 @@ def messaging_events(payload):
 				
 			else:
 				yield event['sender']['id'], 'u wot m8?'
+
+		elif 'postback' in event:
+			# handle postbacks
+			send_post(event['sender']['id'], text_only=False, args={'postback': event['postback']['payload']})
+
 
 
 def send_text_message(recipient, text):
@@ -352,7 +313,6 @@ def send_post(recipient, text="", text_only=True, args={}):
 			}
 		}
 		})
-	
 
 	# handle weather
 	elif 'city' in args:
@@ -380,6 +340,45 @@ def send_post(recipient, text="", text_only=True, args={}):
 			}
 			})
 	
+	# handle postbacks
+	elif 'postback' in args:
+
+		if args['postback'] == 'share':
+			message = {
+			    "recipient":{
+			        "id":"1188629951172288"
+			    },
+			    "message":{
+			        "attachment":{
+			            "type":"template",
+			            "payload":{
+			                "template_type":"generic",
+			                "elements":[
+			                    {
+			                        "title":"Click the button to share me :)",
+			                        "buttons":[
+			                            {
+			                                "type":"element_share"
+			                            }
+			                        ]
+			                    }
+			                ]
+			            }
+			        }
+			    }
+			}
+		
+
+		elif args['postback'] == 'help':
+			message = 'Hi, My name is Andromeda. I am an android. I am always happy to help :)'
+		
+		data = json.dumps({
+			'recipient': {'id': recipient},
+			'message': message 
+			})
+
+
+
 	headers = {'Content-type': 'application/json'}
 	
 	req = requests.post(MSG_API, params=params, data=data, headers=headers)
@@ -415,6 +414,55 @@ def get_weather_json(city):
 	return current_weather.json()
 	
 
+
+def add_persist_menu():
+	'''
+		adds a persistant menu to chat in order to help users or share the bot
+		https://developers.facebook.com/docs/messenger-platform/thread-settings/persistent-menu
+	'''
+
+	menu = json.dumps({
+			"setting_type" : "call_to_actions",
+			"thread_state" : "existing_thread",
+			"call_to_actions":[
+			  {
+			    "type":"postback",
+			    "title":"Help",
+			    "payload": 'share'
+			  },
+			  {
+			    "type":"postback",
+			    "title":"Share me",
+			    "payload": 'help'
+			  }
+			]
+		})
+
+	params = {'access_token': PAT}
+	headers = {'Content-type': 'application/json'}
+	
+	req = requests.post(PERSIST_MENU_API, params=params, data=menu, headers=headers)
+	
+	if req.status_code != requests.codes.ok:
+		print("failed to add persistant menu " + req.text)
+	else:
+		print("added persistent menu " + req.text)
+
+
+def remove_persist_menu():
+
+	delete_menu = json.dumps({
+				"setting_type":"call_to_actions",
+				"thread_state":"existing_thread"
+				})
+
+	params = {'access_token': PAT}
+	headers = {'Content-type': 'application/json'}
+	
+	req = requests.delete(PERSIST_MENU_API, params=params, data=delete_menu, headers=headers)
+	
+	if req.status_code != requests.codes.ok:
+		print ("failed to delete persistant menu " + req.text)
 
 # get_reply('what do you do for fun')
 
