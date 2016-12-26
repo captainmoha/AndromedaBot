@@ -345,10 +345,6 @@ def send_post(recipient, text="", text_only=True, args={}):
 
 		if args['postback'] == 'share':
 			message = {
-			    "recipient":{
-			        "id":"1188629951172288"
-			    },
-			    "message":{
 			        "attachment":{
 			            "type":"template",
 			            "payload":{
@@ -366,11 +362,10 @@ def send_post(recipient, text="", text_only=True, args={}):
 			            }
 			        }
 			    }
-			}
 		
 
 		elif args['postback'] == 'help':
-			message = 'Hi, My name is Andromeda. I am an android. I am always happy to help :)'
+			message = {text: 'Hi, My name is Andromeda. I am an android. I am always happy to help :)'}
 		
 		data = json.dumps({
 			'recipient': {'id': recipient},
