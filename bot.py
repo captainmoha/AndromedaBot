@@ -351,7 +351,16 @@ def send_post(recipient, text="", text_only=True, args={}):
 			                "template_type":"generic",
 			                "elements":[
 			                    {
-			                        "title":"Click the button to share me :)",
+			                        "title":"I am Andromeda your bot friend!",
+			                        'subtitle': "Click this to share me",
+			                        'img_url': "http://i.imgur.com/aBO45Yp.png",
+			                        "default_action":{
+									    "type":"web_url",
+									    "url":"https://www.facebook.com/pg/AndromedaBot",
+									    "messenger_extensions":true,
+									    "webview_height_ratio":"tall",
+									    "fallback_url":"https://www.facebook.com/pg/AndromedaBot"
+									},
 			                        "buttons":[
 			                            {
 			                                "type":"element_share"
@@ -365,7 +374,15 @@ def send_post(recipient, text="", text_only=True, args={}):
 		
 
 		elif args['postback'] == 'help':
-			message = {'text': 'Hi, My name is Andromeda. I am an android. I am always happy to help :)'}
+			help_msg = 'Hi, My name is Andromeda. I am an android. I am always happy to help :D\n\n'
+			help_msg += '-I can chat with you anytime. Just message me and I will reply!\n\n'
+			help_msg += '-You can also ask me about a movie or series or the weather. Like this.\n'
+			help_msg += 'andromeda weather london'
+			help_msg += '\n\nor\n\n'
+			help_msg += 'andromeda movie interstellar'
+			help_msg += '\n\n Go ahead! try it :D'
+
+			message = {'text': help_msg}
 		
 		data = json.dumps({
 			'recipient': {'id': recipient},
