@@ -481,7 +481,7 @@ def get_wiki_json(query):
 		thumb_json = send_json_get_request(WIKI_API, params)
 		thumb_page = thumb_json['query']['pages'][str(pageid)]
 
-		if 'thubmnail' in thumb_page:
+		if 'thumbnail' in thumb_page:
 			thumbnail = thumb_page['thumbnail']
 		else:
 			thumbnail = 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'
