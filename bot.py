@@ -38,6 +38,13 @@ WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
 CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
+PERSIST_MENU_API = 'https://graph.facebook.com/v2.6/me/thread_settings'
+# for article summary
+WIKI_API = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow&format=json'
+# # url
+# 'https://en.wikipedia.org/?curid=21721040'
+# # thumbnail
+# 'https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&pageids=21721040'
 IMDB_API = 'http://www.omdbapi.com'
 
 @app.route('/', methods=['GET'])
@@ -46,11 +53,13 @@ def verify():
 	if (request.args.get('hub.verify_token', '') == 'IF_HOPE_IS_THE_ENGINE_OF_THE_SOUL_THEN'):
 
 		print ('Verification successful!')
+		remove_persist_menu()
 		return request.args.get('hub.challenge', '')
 
 	else:
 		print ('Verification faild!')
 		return 'Error, wrong token'
+
 
 
 @app.route('/', methods=['POST'])
@@ -70,6 +79,52 @@ def handle_messages():
 
 	return 'ok'
 
+
+def add_persist_menu():
+	'''
+		adds a persistant menu to chat in order to help users or share the bot
+		https://developers.facebook.com/docs/messenger-platform/thread-settings/persistent-menu
+	'''
+	menu = json.dumps({
+			"setting_type" : "call_to_actions",
+			"thread_state" : "existing_thread",
+			"call_to_actions":[
+			  {
+			    "type":"postback",
+			    "title":"Need help?",
+			    "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_HELP"
+			  },
+			  {
+			    "type":"postback",
+			    "title":"Share me?",
+			    "payload":"DEVELOPER_DEFINED_PAYLOAD_FOR_START_ORDER"
+			  }
+			]
+		})
+
+	params = {'access_token': PAT}
+	headers = {'Content-type': 'application/json'}
+	
+	req = requests.post(PERSIST_MENU_API, params=params, data=menu, headers=headers)
+	
+	if req.status_code != requests.codes.ok:
+		print ("failed to add persistant menu " + req.text)
+
+
+def remove_persist_menu():
+
+	delete_menu = json.dumps({
+				"setting_type":"call_to_actions",
+				"thread_state":"existing_thread"
+				})
+
+	params = {'access_token': PAT}
+	headers = {'Content-type': 'application/json'}
+	
+	req = requests.delete(PERSIST_MENU_API, params=params, data=delete_menu, headers=headers)
+	
+	if req.status_code != requests.codes.ok:
+		print ("failed to delete persistant menu " + req.text)
 
 def messaging_events(payload):
 	'''
@@ -250,14 +305,7 @@ def handle_commands(recipient, commandList):
 			send_post(recipient, "Invalid city name. Please, try again sweetie.")
 			send_post(recipient, text_only=False, args={'img_url': 'http://i.imgur.com/DhgMkzW.jpg'})
 
-
-
-
-
-
-
-
-		
+	
 def send_post(recipient, text="", text_only=True, args={}):
 	# send post request to the api with the message
 
@@ -342,11 +390,15 @@ def get_movie_json(movie_title):
 	'''
 		Make get request to the oIMDB API to get movie info and return it as json
 	'''
+
 	movie = requests.get(IMDB_API, params={'t': movie_title})
 
 	return movie.json()
 
 def get_weather_json(city):
+	'''
+		Get weather data from openweathermap.org and return it as json
+	'''
 
 	# first api call to get city id
 	current_weather = requests.get(CURRENT_WEATHER_API, params={'q': city, 'appid': WEATHER_API_KEY, 'units': 'metric'})
