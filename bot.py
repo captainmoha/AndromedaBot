@@ -273,7 +273,6 @@ def handle_commands(recipient, commandList):
 def send_post(recipient, text="", text_only=True, args={}):
 	# send post request to the api with the message
 
-	params = {'access_token': PAT}
 	print ("id: " + str(recipient))
 
 	# handle text
@@ -354,7 +353,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 			                    {
 			                        "title":"I am Andromeda your bot friend!",
 			                        'subtitle': "Click this to share me",
-			                        'img_url': "http://i.imgur.com/aBO45Yp.png",
+			                        'image_url': "http://i.imgur.com/aBO45Yp.png",
 			                        "default_action":{
 									    "type":"web_url",
 									    "url":"https://www.facebook.com/pg/AndromedaBot",
@@ -390,14 +389,7 @@ def send_post(recipient, text="", text_only=True, args={}):
 			'message': message 
 			})
 
-
-
-	headers = {'Content-type': 'application/json'}
-	
-	req = requests.post(MSG_API, params=params, data=data, headers=headers)
-	
-	if req.status_code != requests.codes.ok:
-		print ("failed to send message: " + req.text)
+	send_json_post_requst(MSG_API, data)
 
 
 def get_movie_json(movie_title):
@@ -451,15 +443,8 @@ def add_persist_menu():
 			]
 		})
 
-	params = {'access_token': PAT}
-	headers = {'Content-type': 'application/json'}
-	
-	req = requests.post(FB_SETTINGS_API, params=params, data=menu, headers=headers)
-	
-	if req.status_code != requests.codes.ok:
-		print("failed to add persistant menu " + req.text)
-	else:
-		print("added persistent menu " + req.text)
+
+	send_json_post_requst(FB_SETTINGS_API, menu)
 
 
 def remove_persist_menu():
@@ -487,14 +472,20 @@ def add_url_whitelist():
 	    "domain_action_type": "add"
 	})
 
+	send_json_post_requst(FB_SETTINGS_API, data)
+
+
+def send_json_post_requst(url, json_data):
+
 	params = {'access_token': PAT}
 	headers = {'Content-type': 'application/json'}
 	
-	req = requests.post(FB_SETTINGS_API, params=params, data=data, headers=headers)
+	req = requests.post(url, params=params, data=json_data, headers=headers)
 	
 	if req.status_code != requests.codes.ok:
-		print ("failed to add whitelist" + req.text)
-
+		print("json post request faild" + req.text)
+	else:
+		print("json post request succes!")
 
 if __name__ == '__main__':
 	# for c9
