@@ -482,8 +482,8 @@ def get_wiki_json(query):
 		thumb_page = thumb_json['query']['pages'][str(pageid)]
 
 		if 'thumbnail' in thumb_page:
-			thumbnail = thumb_page['thumbnail']
-			print('got thumb: ' + thumbnail)
+			thumbnail = thumb_page['thumbnail']['original']
+			print('got thumb: ' + str(thumbnail))
 		else:
 			thumbnail = 'null'
 
