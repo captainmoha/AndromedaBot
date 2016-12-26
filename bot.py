@@ -477,14 +477,14 @@ def get_wiki_json(query):
 		title = page[str(pageid)]['title']
 		summary = page[str(pageid)]['extract']
 		# get thumbnail
-		params = {'action': 'query', 'format': 'json', 'prop':'pageimages', 'piprop':'original', 'pageids': pageid}
+		params = {'action': 'query', 'format': 'json', 'prop':'pageimages', 'piprop':'original', 'pageids': str(pageid)}
 		thumb_json = send_json_get_request(WIKI_API, params)
 		thumb_page = thumb_json['query']['pages'][str(pageid)]
 
 		if 'thumbnail' in thumb_page:
 			thumbnail = thumb_page['thumbnail']
 		else:
-			thumbnail = 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'
+			thumbnail = 'null'
 
 		article_url = 'https://en.wikipedia.org/?curid=' + str(pageid)
 

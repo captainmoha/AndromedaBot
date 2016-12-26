@@ -38,9 +38,11 @@ def send_json_get_request(url, params):
 	req = requests.get(url, params=params)
 
 	if req.status_code != requests.codes.ok:
-		print("json get request faild" + req.text)
+		#print("json get request faild" + req.text)
+		pass
 	else:
-		print("json get request success! " + req.text)
+		#print("json get request success! " + req.text)
+		pass
 
 	return req.json()
 
@@ -63,12 +65,13 @@ def get_wiki_json(query):
 		title = page[str(pageid)]['title']
 		summary = page[str(pageid)]['extract']
 		# get thumbnail
-		params = {'action': 'query', 'format': 'json', 'prop':'pageimages', 'piprop':'original', 'pageids': pageid}
-		thumb_json = send_json_get_request(WIKI_API, params)
+		print(str(pageid))
+		thumb_params = {'action': 'query', 'format': 'json', 'prop':'pageimages', 'piprop':'original', 'pageids': str(pageid)}
+		thumb_json = send_json_get_request(WIKI_API, thumb_params)
 		thumb_page = thumb_json['query']['pages'][str(pageid)]
-
+		print(thumb_json)
 		if 'thubmnail' in thumb_page:
-			thumbnail = thumb_page['thumbnail']
+			thumbnail = thumb_page['thumbnail']['original']
 		else:
 			thumbnail = 'https://cdn2.iconfinder.com/data/icons/stickerweather/256/na.png'
 
@@ -81,10 +84,10 @@ def get_wiki_json(query):
 			'url': article_url,
 			'summary': summary
 		}
-
+		# print(wiki_json)
 		return wiki_json
 
 
 my_json = get_wiki_json('stack overflow')
 
-print(my_json)
+# print(my_json)
