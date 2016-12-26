@@ -496,7 +496,7 @@ def get_wiki_json(query):
 			'summary': summary
 		}
 
-		return json.dumps(wiki_json)
+		return wiki_json
 
 
 
