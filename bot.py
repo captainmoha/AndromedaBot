@@ -411,10 +411,12 @@ def send_post(recipient, text="", text_only=True, args={}):
 		elif args['postback'] == 'help' or args['postback'] == 'start':
 			help_msg = 'Hi, Welcome :D My name is Andromeda. I am an android. I am always happy to help :D\n\n'
 			help_msg += '-I can chat with you anytime. Just message me and I will reply!\n\n'
-			help_msg += '-You can also ask me about a movie or series or the weather. Like this.\n\n'
+			help_msg += '-You can also ask me about a movie or series or the weather or something on wikipedia. Like this.\n\n'
 			help_msg += 'andromeda weather london'
 			help_msg += '\n\nor\n\n'
 			help_msg += 'andromeda movie interstellar'
+			help_msg += '\n\nor\n\n'
+			help_msg += 'andromeda wiki The Matrix'
 			help_msg += '\n\n Go ahead! try it :D'
 
 			message = {'text': help_msg}
