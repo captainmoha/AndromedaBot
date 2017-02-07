@@ -32,9 +32,14 @@ with open('smiley.csv', 'r') as fCSV:
 	print (str(len(smileys)) + ' ' + str(type(smileys))) 
 
 # This needs to be filled with the Page Access Token that will be provided
-# by the Facebook App that will be created.
+# by the Facebook App that will be created. get your own.
 PAT = 'EAAXVXB27pBsBABePLFiW7FcE4yRVmRKZCGme85s4xT0GZA2rgDEzwU84bvYbE8TQpoQWOSGVvGLxXhBJqghQ8Ww5uGShm18NZAMhghNN0p7pUmn4ZAfmw8nciuCqrROXffTSwpd6iE6cbMbqH9UmZBrmHFhRqphUSG6spCSUyVwZDZD'
+
+# Verification token for webhooks. get your own
+VERIFIY_TOKEN = ''
+# api key from openweathermap. get your own.
 WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
+
 CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
 MSG_API = 'https://graph.facebook.com/v2.6/me/messages'
@@ -51,7 +56,7 @@ def verify():
 	'''
 
 
-	if (request.args.get('hub.verify_token', '') == 'IF_HOPE_IS_THE_ENGINE_OF_THE_SOUL_THEN'):
+	if (request.args.get('hub.verify_token', '') == VERIFIY_TOKEN):
 
 		print ('Verification successful!')
 		add_persist_menu()
