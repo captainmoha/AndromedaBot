@@ -2,7 +2,7 @@
 
 [![N|Solid](http://i.imgur.com/QveERAX.jpg)](https://www.facebook.com/AndromedaBot)
 # Video Demo
-- https://www.youtube.com/watch?v=60-QLcxgRPs
+https://www.youtube.com/watch?v=60-QLcxgRPs
 # Tech
 Andromeda is built from scratch using:
   - Flask (python web framework).
