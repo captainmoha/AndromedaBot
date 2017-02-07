@@ -1,4 +1,5 @@
-# Andromeda is a smart Facebook chat bot
+# Andromeda Bot
+Facebook chat bot written in python.
 
 [![N|Solid](http://i.imgur.com/QveERAX.jpg)](https://www.facebook.com/AndromedaBot)
 # Video Demo
