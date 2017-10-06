@@ -192,7 +192,10 @@ def smart_reply(rows, bad=False):
 
 
 	print("Rows: " + str(len(rows)))
-	randomIndex = random.randrange(0, len(rows))
+	if (len(rows) > 10):
+		randomIndex = random.randrange(0, 7)
+	else:
+		randomIndex = random.randrange(0, len(rows))
 	row = rows[randomIndex]
 
 	print("id: %s - text: %s" % (row[0], row[1]))
