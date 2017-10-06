@@ -160,7 +160,7 @@ def get_reply(text):
 	reply = None
 	rows = None
 
-	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? OR text LIKE ?", ('^'+text+'*', '%'+text+'%'))
+	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'*', '%'+text+'%'))
 	rows = cursor.fetchall()
 
 	# nothing in the database then see if it's an emoji message
