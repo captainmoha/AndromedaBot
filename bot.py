@@ -160,7 +160,7 @@ def get_reply(text):
 	reply = None
 	rows = None
 
-	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? AND text LIKE ?", ('^'+text+'*', '%'+text+'%'))
+	cursor.execute("SELECT line_id, text FROM LineSearch WHERE text Match ? OR text LIKE ?", ('^'+text+'*', '%'+text+'%'))
 	rows = cursor.fetchall()
 
 	# nothing in the database then see if it's an emoji message
@@ -193,7 +193,7 @@ def smart_reply(rows, bad=False):
 
 	print("Rows: " + str(len(rows)))
 	if (len(rows) > 10):
-		randomIndex = random.randrange(0, 7)
+		randomIndex = random.randrange(0, 10)
 	else:
 		randomIndex = random.randrange(0, len(rows))
 	row = rows[randomIndex]
