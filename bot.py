@@ -33,7 +33,7 @@ with open('smiley.csv', 'r') as fCSV:
 
 # This needs to be filled with the Page Access Token that will be provided
 # by the Facebook App that will be created. get your own.
-PAT = 'EAAXVXB27pBsBAJVjKe4wM7CZBzKCJf4a13VfPiSaSEnvaAn7RZCIQqm3NQsWwxczolSySLVtErwUIV7hNZCfMaIwLQkvBIE43XZCgogcRhs7CJBObpe2grfedvejgbrCtM1mNANVU1XiZA70R69T6RB49wppDixJFmVdS7ZBBjCQZDZD'
+PAT = 'EAAXVXB27pBsBAL2Ix1CJSPmprWjAHAEEuJoUJETg3zdZBzhZAwO1qNxlZCDsEVGWSfQ1KMD4uguk9hfbEpRrC2e7YqXHWUgYz4PltjpYVjnkK7vuynQvZC8BrUKJPXqAzcQ4N1VNMGnbfApNoZBsYvfnhKAxKScl4TvjXp25TrwZDZD'
 
 # Verification token for webhooks. get your own
 VERIFIY_TOKEN = ''
