@@ -33,10 +33,12 @@ with open('smiley.csv', 'r') as fCSV:
 
 # This needs to be filled with the Page Access Token that will be provided
 # by the Facebook App that will be created. get your own.
-PAT = 'EAAXVXB27pBsBAJpg3Iemy0b5PZANrFHPXZBqgDGkxpApZAE5IWmIIWZBF4o3VOSOjvM6Sq9xLXkaHWf6VXpBFoYIrL5ZCu9YWbH0qaK4GAH3NZA3S8nBLEqd28LJtxkeqaXcgZBRFtgZBScURCvGpmZAlWZBK9ui5zt1b83bgMQFV4dlS8TzeDoG2A'
+PAT = os.environ['PAT']
 
-# Verification token for webhooks. get your own
-VERIFIY_TOKEN = ''
+
+# # Verification token for webhooks. get your own
+# VERIFIY_TOKEN = ''
+
 # api key from openweathermap. get your own.
 WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
 
@@ -47,6 +49,8 @@ FB_SETTINGS_API = 'https://graph.facebook.com/v2.6/me/thread_settings'
 
 # for article summary
 WIKI_API = 'https://en.wikipedia.org/w/api.php'
+
+# Movie data
 IMDB_API = 'http://www.omdbapi.com'
 
 @app.route('/', methods=['GET'])
@@ -444,8 +448,8 @@ def get_movie_json(movie_title):
 	'''
 		Make get request to the oIMDB API to get movie info and return it as json
 	'''
-
-	movie = requests.get(IMDB_API, params={'t': movie_title})
+	apikey = os.environ['IMDB']
+	movie = requests.get(IMDB_API, params={'t': movie_title, 'apikey': apikey})
 
 	return movie.json()
 
