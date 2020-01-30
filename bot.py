@@ -348,9 +348,6 @@ def send_post(recipient, text="", text_only=True, args={}):
 									'type':"web_url",
 									'url':"http://www.imdb.com/title/" + args['imdbID'] if not (args['imdbID'] == 'N/A') else 'http://www.imdb.com',
 									'title':"View on imdb"
-								},
-								{
-									'type':"element_share"
 								}
 							],
 			
