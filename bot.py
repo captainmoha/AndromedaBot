@@ -40,7 +40,7 @@ PAT = os.environ['PAT']
 # VERIFIY_TOKEN = ''
 
 # api key from openweathermap. get your own.
-WEATHER_API_KEY = '8f417a3430dd2d2d06d5bbb266b5d38f'
+WEATHER_API_KEY = os.environ['WEATHER']
 
 CURRENT_WEATHER_API = 'http://api.openweathermap.org/data/2.5/weather'
 DAILY_WEATHER_API = 'http://api.openweathermap.org/data/2.5/forecast/daily'
